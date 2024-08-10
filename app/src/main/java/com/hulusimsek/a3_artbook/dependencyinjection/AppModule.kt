@@ -2,7 +2,13 @@ package com.hulusimsek.a3_artbook.dependencyinjection
 
 import android.content.Context
 import androidx.room.Room
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
+import com.hulusimsek.a3_artbook.R
 import com.hulusimsek.a3_artbook.api.RetrofitAPI
+import com.hulusimsek.a3_artbook.repo.ArtRepository
+import com.hulusimsek.a3_artbook.repo.ArtRepositoryInterface
+import com.hulusimsek.a3_artbook.roomdb.ArtDao
 import com.hulusimsek.a3_artbook.roomdb.ArtDatabase
 import com.hulusimsek.a3_artbook.util.Util.BASE_URL
 import dagger.Module
@@ -33,4 +39,38 @@ object AppModule {
             .addConverterFactory(GsonConverterFactory.create())
             .baseUrl(BASE_URL).build().create(RetrofitAPI::class.java)
     }
+
+    @Singleton
+    @Provides
+    fun injectNormalRepo(dao: ArtDao, api:RetrofitAPI) = ArtRepository(dao,api) as ArtRepositoryInterface
+
+    @Singleton
+    @Provides
+    fun injecrtGlide(@ApplicationContext context: Context) = Glide.with(context)
+        .setDefaultRequestOptions(
+            RequestOptions().placeholder(R.drawable.ic_launcher_background)
+                .error(R.drawable.ic_launcher_background)
+        )
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
