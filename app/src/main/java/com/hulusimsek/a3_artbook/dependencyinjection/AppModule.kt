@@ -1,16 +1,21 @@
 package com.hulusimsek.a3_artbook.dependencyinjection
 
 import android.content.Context
+import androidx.fragment.app.FragmentFactory
 import androidx.room.Room
 import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestManager
 import com.bumptech.glide.request.RequestOptions
 import com.hulusimsek.a3_artbook.R
+import com.hulusimsek.a3_artbook.adapter.ArtRecyclerAdapter
+import com.hulusimsek.a3_artbook.adapter.ImageRecyclerAdapter
 import com.hulusimsek.a3_artbook.api.RetrofitAPI
 import com.hulusimsek.a3_artbook.repo.ArtRepository
 import com.hulusimsek.a3_artbook.repo.ArtRepositoryInterface
 import com.hulusimsek.a3_artbook.roomdb.ArtDao
 import com.hulusimsek.a3_artbook.roomdb.ArtDatabase
 import com.hulusimsek.a3_artbook.util.Util.BASE_URL
+import com.hulusimsek.a3_artbook.view.ArtFragmentFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -51,6 +56,16 @@ object AppModule {
             RequestOptions().placeholder(R.drawable.ic_launcher_background)
                 .error(R.drawable.ic_launcher_background)
         )
+
+    @Singleton
+    @Provides
+    fun provideFragmentFactory(
+        artRecyclerAdapter: ArtRecyclerAdapter,
+        glide: RequestManager,
+        imageRecyclerAdapter: ImageRecyclerAdapter
+    ): ArtFragmentFactory {
+        return ArtFragmentFactory(artRecyclerAdapter, glide, imageRecyclerAdapter)
+    }
 }
 
 

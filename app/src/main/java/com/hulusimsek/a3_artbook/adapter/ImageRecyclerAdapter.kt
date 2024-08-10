@@ -16,7 +16,7 @@ import com.hulusimsek.a3_artbook.roomdb.Art
 import javax.inject.Inject
 
 class ImageRecyclerAdapter @Inject constructor(
-    val glide: RequestManager
+    private val glide: RequestManager
 )
     : RecyclerView.Adapter<ImageRecyclerAdapter.ImageViewHolder>() {
 
@@ -24,7 +24,7 @@ class ImageRecyclerAdapter @Inject constructor(
 
     class ImageViewHolder(val binding: ImageRowBinding) : RecyclerView.ViewHolder(binding.root)
 
-
+    private var onItemClickListener : ((String) -> Unit) ? = null
 
 
     private val diffUtil = object : DiffUtil.ItemCallback<String>() {
@@ -53,12 +53,20 @@ class ImageRecyclerAdapter @Inject constructor(
         return images.size
     }
 
+    fun setOnItemClickListener(listener: (String) -> Unit) {
+        onItemClickListener = listener
+    }
+
     override fun onBindViewHolder(holder: ImageViewHolder, position: Int) {
         val url = images[position]
         glide.load(url).into(holder.binding.singleArtImageView)
+        holder.itemView.apply {
+            setOnClickListener{
+                onItemClickListener?.let {
+                    it(url)
+                }
+            }
+        }
     }
 
-    fun setOnItemClickListener(listener: (String)->Unit) {
-
-    }
 }

@@ -10,9 +10,11 @@ import com.hulusimsek.a3_artbook.repo.ArtRepository
 import com.hulusimsek.a3_artbook.repo.ArtRepositoryInterface
 import com.hulusimsek.a3_artbook.roomdb.Art
 import com.hulusimsek.a3_artbook.util.Resource
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@HiltViewModel
 class ArtViewModel @Inject constructor(
         private val repository: ArtRepositoryInterface
 ): ViewModel() {
@@ -32,7 +34,7 @@ class ArtViewModel @Inject constructor(
 
     private var insertArtMsg = MutableLiveData<Resource<Art>>()
     val insertMessage : LiveData<Resource<Art>>
-        get() = insertMessage
+        get() = insertArtMsg
 
     fun resetInsertArtMsg() {
         insertArtMsg = MutableLiveData<Resource<Art>>()
@@ -40,7 +42,7 @@ class ArtViewModel @Inject constructor(
     fun setSelectedImage(url : String) {
         selectedImage.postValue(url)
     }
-    suspend fun deleteArt(art: Art) = viewModelScope.launch {
+    fun deleteArt(art: Art) = viewModelScope.launch {
         repository.deleteArt(art)
     }
 
